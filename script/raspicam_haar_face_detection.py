@@ -53,9 +53,15 @@ class HaarFaceDetector:
 		self.image_sub = rospy.Subscriber(image_topic, CompressedImage, self.cbImage)
 
 	def cbImage(self, msg):
+
 		# Convert image to OpenCV format
 		try:
-			self.cv_image = self.bridge.imgmsg_to_cv2(msg, "bgr8")
+			self.cv_image = np.fromstring(msg.data, np.uint8)
+			self.cv_image = cv2.imdecode(self.cv_image, cv2.IMREAD_COLOR)
+
+			# OPTIONAL -- image-rotate """
+			self.cv_image = imutils.rotate(self.cv_image, angle=-90)
+			self.cv_image = cv2.flip(self.cv_image,1)
 		except CvBridgeError as e:
 			print(e)
 
