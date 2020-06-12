@@ -126,6 +126,8 @@ class HaarFaceDetector:
 			cv2.rectangle(self.image, (self.fX, self.fY), 
 				(self.fX + self.fW, self.fY + self.fH), (0, 255, 0), 2)
 
+		self.cbFaceDetected()
+
 	def cbFaceDetected(self):
 
 		if len(self.faceRects) != 0:
@@ -138,7 +140,7 @@ class HaarFaceDetector:
 		self.timestr = time.strftime("%Y%m%d-%H:%M:%S")
 		img_title = self.timestr + "-photo.png"
 		if self.image_received:
-			self.cbFaceDetected()
+			self.detectHaarFace()
 			if self.face_detected:
 				cv2.imwrite(img_title, self.image)
 			else:
