@@ -50,6 +50,8 @@ class HaarFaceDetector:
 		self.img_topic = "/raspicam_node_robot/image/compressed"
 		self.image_sub = rospy.Subscriber(self.img_topic, CompressedImage, self.cbImage)
 
+		rospy.logwarn("HaarFaceDetector Node [ONLINE]...")
+
 		# Allow up to one second to connection
 		rospy.sleep(1)
 
