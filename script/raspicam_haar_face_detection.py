@@ -40,6 +40,8 @@ class HaarFaceDetector:
 
 		rospy.on_shutdown(self.shutdown)
 
+		self.timestr = time.strftime("%Y%m%d-%H:%M:%S")
+
 		# Import haarCascade files
 		self.p = os.path.sep.join([self.rospack.get_path('common_face_application')])
 		self.libraryDir = os.path.join(self.p, "library")
@@ -93,7 +95,7 @@ class HaarFaceDetector:
 		lineType = cv2.LINE_AA
 		bottomLeftOrigin = False # if True (text upside down)
 
-		self.timestr = time.strftime("%Y%m%d-%H:%M:%S")
+#		self.timestr = time.strftime("%Y%m%d-%H:%M:%S")
 
 		cv2.putText(self.cv_image, "{}".format(self.timestr), (10, 15), 
 			fontFace, fontScale-0.1, color, thickness, lineType, 
