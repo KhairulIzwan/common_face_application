@@ -69,10 +69,15 @@ class HaarFaceDetector:
 		# Put an Info
 		self.putInfo()
 
+		# Detect and Draw Face
+		self.detectHaarFace()
+
 		# Show an Image
 		self.showImage()
 
-#		self.take_photo()
+		self.pubRegionofInterest()
+
+		self.take_photo()
 
 	def showImage(self):
 
@@ -120,6 +125,25 @@ class HaarFaceDetector:
 
 			cv2.rectangle(self.cv_image, (self.fX, self.fY), 
 				(self.fX + self.fW, self.fY + self.fH), (0, 255, 0), 2)
+
+	def pubRegionofInterest(self):
+		# Publish to RegionOfInterest msg
+		if len(self.faceRects) != 0:
+#			self.roi.x_offset = self.fX
+#			self.roi.y_offset = self.fY
+#			self.roi.width = self.fX + self.fW
+#			self.roi.height = self.fY + self.fH
+
+			self.face_detected = True
+		else:
+#			self.roi.x_offset = 0
+#			self.roi.y_offset = 0
+#			self.roi.width = 0
+#			self.roi.height = 0
+
+			self.face_detected = False
+
+#		self.roi_pub.publish(self.roi)
 
 	def take_photo(self):
 		img_title = self.timestr + "-photo.jpg"
