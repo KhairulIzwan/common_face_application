@@ -68,6 +68,9 @@ class HaarFaceDetector:
 		except CvBridgeError as e:
 			print(e)
 
+		# Clone the original image for displaying purpose later
+		self.frameClone = self.cv_image.copy()
+
 		# Put an Info
 #		self.putInfo()
 
@@ -101,8 +104,8 @@ class HaarFaceDetector:
 			fontFace, fontScale-0.1, color, thickness, lineType, 
 			bottomLeftOrigin)
 
-		# Clone the original image for displaying purpose later
-		self.frameClone = self.cv_image.copy()
+#		# Clone the original image for displaying purpose later
+#		self.frameClone = self.cv_image.copy()
 
 	def shutdown(self):
 		try:
