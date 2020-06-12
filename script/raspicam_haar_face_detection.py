@@ -77,7 +77,7 @@ class HaarFaceDetector:
 		self.image_received = True
 		self.image = self.cv_image
 
-	def showImage(self):
+	def preview(self):
 
 		cv2.imshow("Haar Face Detector", self.cv_image)
 		cv2.waitKey(1)
