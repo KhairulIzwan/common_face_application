@@ -16,6 +16,7 @@ import os
 import rospkg
 import sys
 import rospy
+import numpy as np
 
 # import the necessary ROS messages
 from std_msgs.msg import String
@@ -71,7 +72,7 @@ class HaarFaceDetector:
 		# Show an Image
 		self.showImage()
 
-		self.take_photo()
+#		self.take_photo()
 
 	def showImage(self):
 
