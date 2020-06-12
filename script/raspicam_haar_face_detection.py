@@ -66,8 +66,8 @@ class HaarFaceDetector:
 		except CvBridgeError as e:
 			print(e)
 
-		# Clone the original image for displaying purpose later
-		self.frameClone = self.cv_image.copy()
+#		# Clone the original image for displaying purpose later
+#		self.frameClone = self.cv_image.copy()
 
 		# Put an Info
 #		self.putInfo()
@@ -76,7 +76,7 @@ class HaarFaceDetector:
 		self.detectHaarFace()
 
 		# Show an Image
-		self.showImage()
+#		self.showImage()
 
 		self.pubRegionofInterest()
 
@@ -152,7 +152,7 @@ class HaarFaceDetector:
 		self.timestr = time.strftime("%Y%m%d-%H:%M:%S")
 		img_title = self.timestr + "-photo.png"
 		if self.face_detected:
-			cv2.imwrite(img_title, self.frameClone)
+			cv2.imwrite(img_title, self.cv_image)
 #			rospy.logwarn("Face Detect")
 #			rospy.sleep(1)
 		else:
