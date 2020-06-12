@@ -21,6 +21,7 @@ import rospy
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from sensor_msgs.msg import CameraInfo
+from sensor_msgs.msg import CompressedImage
 
 from cv_bridge import CvBridge
 from cv_bridge import CvBridgeError
@@ -49,7 +50,7 @@ class HaarFaceDetector:
 
 		# Subscribe to Image msg
 		img_topic = "/raspicam_node_robot/image/compressed"
-		self.image_sub = rospy.Subscriber(image_topic, Image, self.cbImage)
+		self.image_sub = rospy.Subscriber(image_topic, CompressedImage, self.cbImage)
 
 	def cbImage(self, msg):
 		# Convert image to OpenCV format
