@@ -51,7 +51,7 @@ class HaarFaceDetector:
 
 		# Subscribe to Image msg
 		img_topic = "/raspicam_node_robot/image/compressed"
-		self.image_sub = rospy.Subscriber(image_topic, CompressedImage, self.cbImage)
+		self.image_sub = rospy.Subscriber(img_topic, CompressedImage, self.cbImage)
 
 	def cbImage(self, msg):
 
