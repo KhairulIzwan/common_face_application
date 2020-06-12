@@ -79,7 +79,7 @@ class HaarFaceDetector:
 
 	def preview(self):
 
-		cv2.imshow("Haar Face Detector", self.cv_image)
+		cv2.imshow("Haar Face Detector", self.image)
 		cv2.waitKey(1)
 
 	# Overlay some text onto the image display
