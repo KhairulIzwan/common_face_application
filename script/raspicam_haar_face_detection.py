@@ -67,17 +67,17 @@ class HaarFaceDetector:
 			print(e)
 
 		# Put an Info
-		self.putInfo()
+#		self.putInfo()
 
 		# Detect and Draw Face
-		self.detectHaarFace()
+#		self.detectHaarFace()
 
 		# Show an Image
-#		self.showImage()
+		self.showImage()
 
-		self.pubRegionofInterest()
+#		self.pubRegionofInterest()
 
-		self.take_photo()
+#		self.take_photo()
 
 	def showImage(self):
 
