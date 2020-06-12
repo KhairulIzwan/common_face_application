@@ -73,7 +73,7 @@ class HaarFaceDetector:
 		self.detectHaarFace()
 
 		# Show an Image
-#		self.showImage()
+		self.showImage()
 
 		self.pubRegionofInterest()
 
