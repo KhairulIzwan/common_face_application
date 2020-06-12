@@ -119,9 +119,9 @@ class HaarFaceDetector:
 
 		# Loop over the face bounding boxes
 		for (self.fX, self.fY, self.fW, self.fH) in self.faceRects:
-			 Extract the face ROI and update the list of bounding boxes
+			# Extract the face ROI and update the list of bounding boxes
 			faceROI = self.image[self.fY:self.fY + self.fH, self.fX:self.fX + self.fW]
-			self.rects.append((self.fX, self.fY, self.fX + self.fW, self.fY + self.fH))
+#			self.rects.append((self.fX, self.fY, self.fX + self.fW, self.fY + self.fH))
 
 			cv2.rectangle(self.image, (self.fX, self.fY), 
 				(self.fX + self.fW, self.fY + self.fH), (0, 255, 0), 2)
