@@ -151,6 +151,7 @@ class HaarFaceDetector:
 			cv2.imwrite(img_title, self.frameClone)
 			rospy.logwarn("Face Detect")
 		else:
+			rospy.logwarn("No Face Detect")
 			pass
 
 def main(args):
