@@ -140,6 +140,7 @@ class HaarFaceDetector:
 		self.timestr = time.strftime("%Y%m%d-%H:%M:%S")
 		img_title = self.timestr + "-photo.png"
 		if self.image_received:
+			self.preview()
 			self.detectHaarFace()
 			if self.face_detected:
 				cv2.imwrite(img_title, self.image)
