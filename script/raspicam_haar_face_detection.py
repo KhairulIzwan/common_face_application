@@ -73,7 +73,7 @@ class HaarFaceDetector:
 		self.detectHaarFace()
 
 		# Show an Image
-		self.showImage()
+#		self.showImage()
 
 		self.pubRegionofInterest()
 
@@ -149,9 +149,9 @@ class HaarFaceDetector:
 		img_title = self.timestr + "-photo.jpg"
 		if self.face_detected:
 			cv2.imwrite(img_title, self.frameClone)
-			rospy.logwarn("Face Detect")
+#			rospy.logwarn("Face Detect")
 		else:
-			rospy.logwarn("No Face Detect")
+#			rospy.logwarn("No Face Detect")
 			pass
 
 def main(args):
