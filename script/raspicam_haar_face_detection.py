@@ -40,8 +40,6 @@ class HaarFaceDetector:
 
 		rospy.on_shutdown(self.shutdown)
 
-		self.timestr = time.strftime("%Y%m%d-%H:%M:%S")
-
 		# Import haarCascade files
 		self.p = os.path.sep.join([self.rospack.get_path('common_face_application')])
 		self.libraryDir = os.path.join(self.p, "library")
@@ -75,14 +73,14 @@ class HaarFaceDetector:
 #		self.putInfo()
 
 		# Detect and Draw Face
-#		self.detectHaarFace()
+		self.detectHaarFace()
 
 		# Show an Image
 		self.showImage()
 
-#		self.pubRegionofInterest()
+		self.pubRegionofInterest()
 
-#		self.take_photo()
+		self.take_photo()
 
 	def showImage(self):
 
@@ -115,7 +113,7 @@ class HaarFaceDetector:
 
 	def detectHaarFace(self):
 		# Create an empty arrays for save rects value later
-		self.rects = []
+#		self.rects = []
 		
 		# Detect all faces in the input frame
 		self.faceRects = self.faceCascade.detectMultiScale(self.cv_image,
@@ -123,13 +121,13 @@ class HaarFaceDetector:
 			flags = cv2.CASCADE_SCALE_IMAGE)
 
 		# Loop over the face bounding boxes
-		for (self.fX, self.fY, self.fW, self.fH) in self.faceRects:
+#		for (self.fX, self.fY, self.fW, self.fH) in self.faceRects:
 			# Extract the face ROI and update the list of bounding boxes
-			faceROI = self.cv_image[self.fY:self.fY + self.fH, self.fX:self.fX + self.fW]
-			self.rects.append((self.fX, self.fY, self.fX + self.fW, self.fY + self.fH))
+#			faceROI = self.cv_image[self.fY:self.fY + self.fH, self.fX:self.fX + self.fW]
+#			self.rects.append((self.fX, self.fY, self.fX + self.fW, self.fY + self.fH))
 
-			cv2.rectangle(self.cv_image, (self.fX, self.fY), 
-				(self.fX + self.fW, self.fY + self.fH), (0, 255, 0), 2)
+#			cv2.rectangle(self.cv_image, (self.fX, self.fY), 
+#				(self.fX + self.fW, self.fY + self.fH), (0, 255, 0), 2)
 
 	def pubRegionofInterest(self):
 		# Publish to RegionOfInterest msg
@@ -151,11 +149,12 @@ class HaarFaceDetector:
 #		self.roi_pub.publish(self.roi)
 
 	def take_photo(self):
-		img_title = self.timestr + "-photo.jpg"
+		self.timestr = time.strftime("%Y%m%d-%H:%M:%S")
+		img_title = self.timestr + "-photo.png"
 		if self.face_detected:
 			cv2.imwrite(img_title, self.frameClone)
 #			rospy.logwarn("Face Detect")
-			rospy.sleep(1)
+#			rospy.sleep(1)
 		else:
 #			rospy.logwarn("No Face Detect")
 			pass
