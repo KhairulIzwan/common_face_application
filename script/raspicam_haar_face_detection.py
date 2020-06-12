@@ -153,7 +153,7 @@ class HaarFaceDetector:
 		img_title = self.timestr + "-photo.png"
 		if self.face_detected:
 			cv2.imwrite(img_title, self.cv_image)
-			rospy.logwarn("Face Detect")
+#			rospy.logwarn("Face Detect")
 #			rospy.sleep(1)
 		else:
 #			rospy.logwarn("No Face Detect")
