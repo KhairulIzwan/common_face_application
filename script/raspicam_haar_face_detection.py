@@ -146,6 +146,8 @@ class HaarFaceDetector:
 			self.detectHaarFace()
 			if self.face_detected:
 				cv2.imwrite(img_title, self.image)
+				# Sleep to give the last log messages time to be sent
+				rospy.logerr("Image Captured")
 			else:
 				pass
 		else:
