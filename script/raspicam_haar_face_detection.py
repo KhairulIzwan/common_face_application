@@ -35,6 +35,11 @@ class HaarFaceDetector:
 		self.rospack = rospkg.RosPack()
 		self.image_received = False
 
+		# initialize our video writer
+		self.fourcc = cv2.VideoWriter_fourcc(*"MJPG")
+		self.writer = cv2.VideoWriter(args["output"], self.fourcc, 25,
+			(320, 240), True)
+
 		rospy.on_shutdown(self.shutdown)
 
 		# Import haarCascade files
@@ -78,6 +83,7 @@ class HaarFaceDetector:
 
 		self.image_received = True
 		self.image = self.cv_image
+		self.image_clone = self.image.copy()
 
 	def preview(self):
 
@@ -119,14 +125,14 @@ class HaarFaceDetector:
 			scaleFactor = 1.1, minNeighbors = 5, minSize = (30, 30),
 			flags = cv2.CASCADE_SCALE_IMAGE)
 
-		# Loop over the face bounding boxes
-		for (self.fX, self.fY, self.fW, self.fH) in self.faceRects:
-			# Extract the face ROI and update the list of bounding boxes
-			faceROI = self.image[self.fY:self.fY + self.fH, self.fX:self.fX + self.fW]
-#			self.rects.append((self.fX, self.fY, self.fX + self.fW, self.fY + self.fH))
+#		# Loop over the face bounding boxes
+#		for (self.fX, self.fY, self.fW, self.fH) in self.faceRects:
+#			# Extract the face ROI and update the list of bounding boxes
+#			faceROI = self.image[self.fY:self.fY + self.fH, self.fX:self.fX + self.fW]
+##			self.rects.append((self.fX, self.fY, self.fX + self.fW, self.fY + self.fH))
 
-			cv2.rectangle(self.image, (self.fX, self.fY), 
-				(self.fX + self.fW, self.fY + self.fH), (0, 255, 0), 2)
+#			cv2.rectangle(self.image, (self.fX, self.fY), 
+#				(self.fX + self.fW, self.fY + self.fH), (0, 255, 0), 2)
 
 		self.cbFaceDetected()
 
@@ -145,7 +151,9 @@ class HaarFaceDetector:
 			self.preview()
 			self.detectHaarFace()
 			if self.face_detected:
-				cv2.imwrite(img_title, self.image)
+				cv2.imwrite(img_title, self.image_clone)
+				self.writer.write(self.image_clone)
+
 				# Sleep to give the last log messages time to be sent
 				rospy.logerr("Image Captured")
 			else:
