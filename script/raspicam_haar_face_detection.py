@@ -37,8 +37,6 @@ class HaarFaceDetector:
 
 		# initialize our video writer
 		self.fourcc = cv2.VideoWriter_fourcc(*"MJPG")
-		self.writer = cv2.VideoWriter(args["output"], self.fourcc, 25,
-			(320, 240), True)
 
 		rospy.on_shutdown(self.shutdown)
 
@@ -147,15 +145,21 @@ class HaarFaceDetector:
 
 		self.timestr = time.strftime("%Y%m%d-%H:%M:%S")
 		img_title = self.timestr + "-photo.png"
+		vid_title = self.timestr + "-video.avi"
 		if self.image_received:
 			self.preview()
 			self.detectHaarFace()
 			if self.face_detected:
+				# Capture an Image
 				cv2.imwrite(img_title, self.image_clone)
+
+				# Record a Video
+				self.writer = cv2.VideoWriter(vid_title, self.fourcc, 
+					25, (self.imgWidth, self.imgHeight), True)
 				self.writer.write(self.image_clone)
 
 				# Sleep to give the last log messages time to be sent
-				rospy.logerr("Image Captured")
+				rospy.logerr("Image and Image Captured")
 			else:
 				pass
 		else:
