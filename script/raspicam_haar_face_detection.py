@@ -152,7 +152,7 @@ class HaarFaceDetector:
 			self.cbCameraInfo()
 			if self.face_detected:
 				# Capture an Image
-				cv2.imwrite(img_title, self.image_clone)
+#				cv2.imwrite(img_title, self.image_clone)
 
 				# Record a Video
 				self.writer = cv2.VideoWriter(vid_title, self.fourcc, 
@@ -160,7 +160,7 @@ class HaarFaceDetector:
 				self.writer.write(self.image_clone)
 
 				# Sleep to give the last log messages time to be sent
-				rospy.logerr("Image and Image Captured")
+				rospy.logerr("Image and Video Captured")
 			else:
 				pass
 		else:
