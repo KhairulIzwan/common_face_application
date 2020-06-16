@@ -154,9 +154,9 @@ class HaarFaceDetector:
 				cv2.imwrite(img_title, self.image_clone)
 
 				# Record a Video
-				self.writer = cv2.VideoWriter(vid_title, self.fourcc, 
-					25, (self.imgWidth, self.imgHeight), True)
-				self.writer.write(self.image_clone)
+#				self.writer = cv2.VideoWriter(vid_title, self.fourcc, 
+#					25, (self.imgWidth, self.imgHeight), True)
+#				self.writer.write(self.image_clone)
 
 				# Sleep to give the last log messages time to be sent
 				rospy.logerr("Image and Image Captured")
