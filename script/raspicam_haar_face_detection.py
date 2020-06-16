@@ -149,6 +149,7 @@ class HaarFaceDetector:
 		if self.image_received:
 			self.preview()
 			self.detectHaarFace()
+			self.cbCameraInfo()
 			if self.face_detected:
 				# Capture an Image
 				cv2.imwrite(img_title, self.image_clone)
