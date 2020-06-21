@@ -161,7 +161,7 @@ class HaarFaceDetector:
 
 				# Sleep to give the last log messages time to be sent
 				rospy.logerr("Image Captured")
-				rospy.logerr("Video Captured")
+#				rospy.logerr("Video Captured")
 			else:
 				pass
 		else:
