@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+#Title: Python Subscriber for Tank Navigation
+#Author: Khairul Izwan Bin Kamsani - [23-01-2020]
+#Description: Tank Navigation Subcriber Nodes (Python)
+
 from __future__ import print_function
 from __future__ import division
 
@@ -21,14 +25,21 @@ from sensor_msgs.msg import CameraInfo
 from cv_bridge import CvBridge
 from cv_bridge import CvBridgeError
 
+from sensor_msgs.msg import RegionOfInterest
+
+from common_pid_controller.objcenter import ObjCenter
+from common_face_application.msg import objCenter
+
 class HaarFaceDetector:
 
 	def __init__(self):
 
-		rospy.logwarn("HaarFaceDetector node [ONLINE]")
+		rospy.logwarn("HaarFaceDetector (ROI) node [ONLINE]")
 
 		self.bridge = CvBridge()
 		self.rospack = rospkg.RosPack()
+		self.roi = RegionOfInterest()
+		self.centerRoi = objCenter()
 
 		self.image_recieved = False
 
@@ -42,12 +53,10 @@ class HaarFaceDetector:
 		self.haar_filename = self.libraryDir + "/haarcascade_frontalface_default.xml"
 
 		# Path to input Haar cascade for face detection
-		self.faceCascade = cv2.CascadeClassifier(self.haar_filename)
+		self.faceCascade = ObjCenter(self.haar_filename)
 
 		# Subscribe to Image msg
 		image_topic = "/cv_camera/image_raw"
-		# Un-comment if is using raspicam
-#		img_topic = "/raspicam_node_robot/image/compressed"
 		self.image_sub = rospy.Subscriber(image_topic, Image, self.cbImage)
 
 		# Subscribe to CameraInfo msg
@@ -55,8 +64,16 @@ class HaarFaceDetector:
 		self.cameraInfo_sub = rospy.Subscriber(cameraInfo_topic, CameraInfo, 
 			self.cbCameraInfo)
 
+		# Publish to RegionOfInterest msg
+		roi_topic = "/faceROI"
+		self.roi_pub = rospy.Publisher(roi_topic, RegionOfInterest, queue_size=10)
+
+		# Publish to objCenter msg
+		objCenter_topic = "/centerROI"
+		self.objCenter_pub = rospy.Publisher(objCenter_topic, objCenter, queue_size=10)
+
 		# Allow up to one second to connection
-		rospy.sleep(1)
+		rospy.sleep(0.1)
 
 	# Convert image to OpenCV format
 	def cbImage(self, msg):
@@ -77,6 +94,17 @@ class HaarFaceDetector:
 		self.imgWidth = msg.width
 		self.imgHeight = msg.height
 
+		# calculate the center of the frame as this is where we will
+		# try to keep the object
+		self.centerX = self.imgWidth // 2
+		self.centerY = self.imgHeight // 2
+
+	# Show the output frame
+	def cbShowImage(self):
+
+		cv2.imshow("Haar Face Detector (ROI)", self.cv_image)
+		cv2.waitKey(1)
+
 	# Image information callback
 	def cbInfo(self):
 
@@ -92,6 +120,9 @@ class HaarFaceDetector:
 		cv2.putText(self.cv_image, "{}".format(self.timestr), (10, 20), 
 			fontFace, fontScale, color, thickness, lineType, 
 			bottomLeftOrigin)
+		cv2.putText(self.cv_image, "(%d, %d)" % (self.objX, self.objY), 
+			(self.imgWidth-100, 20), fontFace, fontScale, 
+			color, thickness, lineType, bottomLeftOrigin)
 		cv2.putText(self.cv_image, "Sample", (10, self.imgHeight-10), 
 			fontFace, fontScale, color, thickness, lineType, 
 			bottomLeftOrigin)
@@ -99,41 +130,52 @@ class HaarFaceDetector:
 			(self.imgWidth-100, self.imgHeight-10), fontFace, fontScale, 
 			color, thickness, lineType, bottomLeftOrigin)
 
-
-	# Show the output frame
-	def cbShowImage(self):
-
-		cv2.imshow("Haar Face Detector", self.cv_image)
-		cv2.waitKey(1)
-
+	# Detect the face(s)
 	def cbFace(self):
 		if self.image_received:
-			# Create an empty arrays for save rects value later
-			self.rects = []
-		
-			# Detect all faces in the input frame
-			self.faceRects = self.faceCascade.detectMultiScale(self.cv_image,
-				scaleFactor = 1.1, minNeighbors = 5, minSize = (30, 30),
-				flags = cv2.CASCADE_SCALE_IMAGE)
+			# find the object's location
+			objectLoc = self.faceCascade.update(self.cv_image, 
+				(self.centerX, self.centerY))
+			((self.objX, self.objY), rect) = objectLoc
 
-			# Loop over the face bounding boxes
-			for (self.fX, self.fY, self.fW, self.fH) in self.faceRects:
-				# Extract the face ROI and update the list of bounding boxes
-				faceROI = self.cv_image[self.fY:self.fY + self.fH, self.fX:self.fX + self.fW]
-				self.rects.append((self.fX, self.fY, self.fX + self.fW, self.fY + self.fH))
+			self.pubObjCenter()
 
-				cv2.rectangle(self.cv_image, (self.fX, self.fY), 
-					(self.fX + self.fW, self.fY + self.fH), (0, 255, 0), 2)
+			# extract the bounding box and draw it
+			if rect is not None:
+				(self.x, self.y, self.w, self.h) = rect
+				cv2.rectangle(self.cv_image, (self.x, self.y), 
+					(self.x + self.w, self.y + self.h), 
+					(0, 255, 0), 2)
+
+				self.pubRegionofInterest()
 
 			self.cbInfo()
 			self.cbShowImage()
 		else:
 			rospy.logerr("No images recieved")
 
+	# Publish to RegionOfInterest msg
+	def pubRegionofInterest(self):
+
+		self.roi.x_offset = self.x
+		self.roi.y_offset = self.y
+		self.roi.width = self.x + self.w
+		self.roi.height = self.y + self.h
+
+		self.roi_pub.publish(self.roi)
+
+	# Publish to objCenter msg
+	def pubObjCenter(self):
+
+		self.centerRoi.centerX = self.objX
+		self.centerRoi.centerY = self.objY
+
+		self.objCenter_pub.publish(self.centerRoi)
+
 	# rospy shutdown callback
 	def cbShutdown(self):
 		try:
-			rospy.logerr("HaarFaceDetector node [OFFLINE]")
+			rospy.logwarn("HaarFaceDetector (ROI) node [OFFLINE]")
 		finally:
 			cv2.destroyAllWindows()
 
