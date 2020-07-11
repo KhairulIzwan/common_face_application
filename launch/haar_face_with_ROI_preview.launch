@@ -1,0 +1,13 @@
+<launch>
+
+	<!-- COMMON_CAMERA_APPLICATION {CAMERA_ROBOT} -->
+	<include file="$(find common_camera_application)/launch/camera_robot.launch"/>
+
+	<!-- COMMON_FACE_APPLICATION {CAMERA PREVIEW} -->
+	<node	pkg="common_face_application" 
+		name="haar_preview" 
+		type="haar_face_detection_with_roi.py"> 
+		<!-- output="screen"> -->
+	</node>
+
+</launch>
