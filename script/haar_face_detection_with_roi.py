@@ -27,7 +27,7 @@ from cv_bridge import CvBridgeError
 
 from sensor_msgs.msg import RegionOfInterest
 
-from common_pid_controller.objcenter import ObjCenter
+from common_face_application.objcenter import ObjCenter
 from common_face_application.msg import objCenter
 
 class HaarFaceDetector:
@@ -48,7 +48,7 @@ class HaarFaceDetector:
 
 		# Import haarCascade files
 		self.p = os.path.sep.join([self.rospack.get_path('common_face_application')])
-		self.libraryDir = os.path.join(self.p, "library")
+		self.libraryDir = os.path.join(self.p, "model")
 
 		self.haar_filename = self.libraryDir + "/haarcascade_frontalface_default.xml"
 
@@ -73,7 +73,7 @@ class HaarFaceDetector:
 		self.objCenter_pub = rospy.Publisher(objCenter_topic, objCenter, queue_size=10)
 
 		# Allow up to one second to connection
-		rospy.sleep(0.1)
+		rospy.sleep(1)
 
 	# Convert image to OpenCV format
 	def cbImage(self, msg):
