@@ -42,7 +42,7 @@ class SmileDetector:
 		## load the face detector cascade and smile detector CNN
 		# Import haarCascade files
 		self.p = os.path.sep.join([self.rospack.get_path('common_face_application')])
-		self.libraryDir = os.path.join(self.p, "library")
+		self.libraryDir = os.path.join(self.p, "model")
 
 		self.haar = self.libraryDir + "/haarcascade_frontalface_default.xml"
 
